@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en" data-app-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Wireframe AI turns product briefs into editable wireframes using transparent, deterministic design rules."
+    />
+    <meta name="theme-color" content="#f5f3ee" />
+    <title>Wireframe AI — Local UI Copilot</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="quality.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Wireframe AI home">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="brand-copy">
+          <strong>Wireframe AI</strong>
+          <small>LOCAL DESIGN COPILOT</small>
+        </span>
+      </a>
+
+      <div class="document-meta" aria-label="Document status">
+        <button
+          class="document-name"
+          id="renameProject"
+          type="button"
+          title="Rename project"
+        >
+          <span id="projectName">Untitled workspace</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m13.8 2.8 3.4 3.4L7.4 16H4v-3.4l9.8-9.8Z" />
+            <path d="m11.8 4.8 3.4 3.4" />
+          </svg>
+        </button>
+        <span class="save-state" id="saveState"
+          ><span></span> Saved locally</span
+        >
+      </div>
+
+      <div class="topbar-actions">
+        <div
+          class="segmented compact-only"
+          role="group"
+          aria-label="Preview device"
+        >
+          <button
+            type="button"
+            class="icon-button is-active"
+            data-device="desktop"
+            aria-label="Desktop preview"
+            aria-pressed="true"
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="2.5" y="3" width="15" height="10.5" rx="1.5" />
+              <path d="M7 17h6M10 13.5V17" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="icon-button"
+            data-device="tablet"
+            aria-label="Tablet preview"
+            aria-pressed="false"
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="4" y="2" width="12" height="16" rx="2" />
+              <path d="M9 15.5h2" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="icon-button"
+            data-device="mobile"
+            aria-label="Mobile preview"
+            aria-pressed="false"
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="5.5" y="1.5" width="9" height="17" rx="2" />
+              <path d="M9 15.7h2" />
+            </svg>
+          </button>
+        </div>
+
+        <button class="button ghost" id="newProject" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M10 3v14M3 10h14" />
+          </svg>
+          New
+        </button>
+        <button
+          class="button dark"
+          id="exportMenuButton"
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          Export
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m6 8 4 4 4-4" />
+          </svg>
+        </button>
+        <div class="menu export-menu" id="exportMenu" role="menu" hidden>
+          <button type="button" role="menuitem" id="exportHtml">
+            <span class="menu-icon">&lt;/&gt;</span
+            ><span
+              ><strong>HTML prototype</strong
+              ><small>Standalone, editable file</small></span
+            >
+          </button>
+          <button type="button" role="menuitem" id="exportJson">
+            <span class="menu-icon">{ }</span
+            ><span
+              ><strong>Wireframe JSON</strong
+              ><small>Portable project data</small></span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-shell" id="workspace">
+      <aside class="panel brief-panel" aria-label="Brief and layers">
+        <section class="panel-section brief-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">01 / DIRECTION</span>
+              <h1>Describe the product</h1>
+            </div>
+            <button
+              class="help-button"
+              type="button"
+              aria-label="About local generation"
+              data-tooltip="Uses deterministic local rules — no prompt leaves your browser."
+            >
+              ?
+            </button>
+          </div>
+          <label class="sr-only" for="briefInput">Product brief</label>
+          <div class="prompt-field">
+            <textarea
+              id="briefInput"
+              rows="6"
+              maxlength="520"
+              placeholder="A calm analytics dashboard for a sustainable energy startup. Show live production, carbon savings, and recent alerts…"
+            ></textarea>
+            <span class="prompt-count"
+              ><span id="promptCount">0</span>/520</span
+            >
+          </div>
+          <div class="suggestions" aria-label="Brief suggestions">
+            <button
+              type="button"
+              class="chip"
+              data-prompt="A bold launch page for an AI research assistant, with social proof and a focused waitlist CTA."
+            >
+              AI launch
+            </button>
+            <button
+              type="button"
+              class="chip"
+              data-prompt="A calm finance dashboard for freelancers, showing cash flow, invoices, expenses, and upcoming tax dates."
+            >
+              Finance
+            </button>
+            <button
+              type="button"
+              class="chip"
+              data-prompt="A friendly mobile habit coach with daily momentum, quick check-ins, streaks, and a weekly progress chart."
+            >
+              Habit app
+            </button>
+            <button
+              type="button"
+              class="chip"
+              data-prompt="A precise operations dashboard for a logistics team, with fleet health, route performance, alerts, and deliveries."
+            >
+              Operations
+            </button>
+          </div>
+
+          <div class="format-picker" role="group" aria-label="Wireframe format">
+            <button type="button" data-format="landing" aria-pressed="false">
+              <svg viewBox="0 0 32 24" aria-hidden="true">
+                <rect x="1" y="1" width="30" height="22" rx="2" />
+                <path d="M1 6h30M5 10h10M5 13h7M20 10h7v7h-7zM5 19h22" />
+              </svg>
+              Landing
+            </button>
+            <button
+              type="button"
+              data-format="dashboard"
+              class="is-active"
+              aria-pressed="true"
+            >
+              <svg viewBox="0 0 32 24" aria-hidden="true">
+                <rect x="1" y="1" width="30" height="22" rx="2" />
+                <path d="M8 1v22M11 5h7M11 9h17M11 13h8v6h-8zM22 13h6v6h-6z" />
+              </svg>
+              Dashboard
+            </button>
+            <button type="button" data-format="mobile" aria-pressed="false">
+              <svg viewBox="0 0 32 24" aria-hidden="true">
+                <rect x="10" y="1" width="12" height="22" rx="3" />
+                <path d="M13 5h6M13 9h6M13 13h6v5h-6z" />
+              </svg>
+              Mobile
+            </button>
+          </div>
+
+          <button class="generate-button" id="generateButton" type="button">
+            <span class="spark" aria-hidden="true">✦</span>
+            <span>Generate wireframe</span>
+            <kbd>⌘ ↵</kbd>
+          </button>
+          <p class="local-note">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 9V6a5 5 0 0 1 10 0v3M3.5 9h13v9h-13z" />
+              <path d="M10 12v3" />
+            </svg>
+            Private by design. Everything runs in this tab.
+          </p>
+        </section>
+
+        <section class="panel-section layers-section">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">02 / STRUCTURE</span>
+              <h2>Component tree</h2>
+            </div>
+            <button
+              class="square-button"
+              id="addBlockButton"
+              type="button"
+              aria-label="Add component"
+              title="Add component"
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 4v12M4 10h12" />
+              </svg>
+            </button>
+          </div>
+          <p class="tree-hint">
+            Select, reorder, or hide blocks. Changes save automatically.
+          </p>
+          <ul
+            class="component-tree"
+            id="componentTree"
+            aria-label="Wireframe components"
+          ></ul>
+        </section>
+      </aside>
+
+      <section class="canvas-panel" aria-label="Wireframe canvas">
+        <div class="canvas-toolbar">
+          <div class="breadcrumb" aria-label="Current selection">
+            <span id="formatLabel">Dashboard</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m8 5 5 5-5 5" />
+            </svg>
+            <strong id="selectionBreadcrumb">Overview</strong>
+          </div>
+          <div class="canvas-actions">
+            <button
+              class="button ghost variant-button"
+              id="variantButton"
+              type="button"
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M3 6h10a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4H6" />
+                <path d="m8 11-3 3 3 3M12 3l3 3-3 3" />
+              </svg>
+              New variant
+              <span id="variantNumber">V1</span>
+            </button>
+            <div class="zoom-control" role="group" aria-label="Canvas zoom">
+              <button id="zoomOut" type="button" aria-label="Zoom out">
+                −
+              </button>
+              <output id="zoomValue">82%</output>
+              <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage" id="stage">
+          <div class="stage-grid" aria-hidden="true"></div>
+          <div class="artboard-wrap" id="artboardWrap">
+            <div class="artboard device-desktop" id="artboard">
+              <div class="browser-chrome" id="browserChrome" aria-hidden="true">
+                <div class="traffic-lights">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="address-bar">
+                  preview.local/<span id="previewSlug">workspace</span>
+                </div>
+                <div class="browser-more">•••</div>
+              </div>
+              <div
+                class="wireframe theme-cobalt"
+                id="wireframeCanvas"
+                tabindex="0"
+                aria-label="Generated wireframe preview"
+              ></div>
+            </div>
+          </div>
+          <div class="empty-state" id="emptyState">
+            <div class="empty-orbit" aria-hidden="true">
+              <span></span><span></span><span></span><i>✦</i>
+            </div>
+            <span class="eyebrow">CANVAS READY</span>
+            <h2>Turn an idea into structure.</h2>
+            <p>
+              Write a brief or choose a starting point. Your editable wireframe
+              will appear here.
+            </p>
+            <button type="button" class="button dark" id="emptyGenerate">
+              Use example brief
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel inspector-panel" aria-label="Inspector">
+        <div class="inspector-empty" id="inspectorEmpty">
+          <div class="inspector-empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 42 42">
+              <rect x="6" y="6" width="30" height="30" rx="4" />
+              <path d="M13 15h16M13 21h10M13 27h13" />
+            </svg>
+          </div>
+          <h2>Nothing selected</h2>
+          <p>
+            Choose a block on the canvas or in the component tree to edit its
+            content and layout.
+          </p>
+        </div>
+
+        <div class="inspector-content" id="inspectorContent" hidden>
+          <section class="panel-section inspector-header">
+            <span class="eyebrow">03 / REFINE</span>
+            <div class="selected-title-row">
+              <div>
+                <span class="selected-type" id="selectedType">SECTION</span>
+                <h2 id="selectedTitle">Hero section</h2>
+              </div>
+              <button
+                class="square-button"
+                id="hideBlockButton"
+                type="button"
+                aria-label="Hide component"
+                title="Hide component"
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5Z" />
+                  <circle cx="10" cy="10" r="2.4" />
+                </svg>
+              </button>
+            </div>
+          </section>
+
+          <div
+            class="inspector-tabs"
+            role="tablist"
+            aria-label="Inspector sections"
+          >
+            <button
+              role="tab"
+              type="button"
+              aria-selected="true"
+              aria-controls="contentTab"
+              id="contentTabButton"
+            >
+              Content
+            </button>
+            <button
+              role="tab"
+              type="button"
+              aria-selected="false"
+              aria-controls="styleTab"
+              id="styleTabButton"
+            >
+              Style
+            </button>
+          </div>
+
+          <section
+            class="panel-section inspector-form"
+            id="contentTab"
+            role="tabpanel"
+            aria-labelledby="contentTabButton"
+          >
+            <label for="blockLabel">Layer name</label>
+            <input id="blockLabel" type="text" maxlength="42" />
+            <label for="blockEyebrow">Eyebrow</label>
+            <input id="blockEyebrow" type="text" maxlength="56" />
+            <label for="blockHeading">Heading</label>
+            <textarea id="blockHeading" rows="3" maxlength="120"></textarea>
+            <label for="blockBody">Supporting copy</label>
+            <textarea id="blockBody" rows="4" maxlength="220"></textarea>
+            <label for="blockAction">Action label</label>
+            <input id="blockAction" type="text" maxlength="34" />
+          </section>
+
+          <section
+            class="panel-section inspector-form"
+            id="styleTab"
+            role="tabpanel"
+            aria-labelledby="styleTabButton"
+            hidden
+          >
+            <fieldset>
+              <legend>Alignment</legend>
+              <div class="segmented full" id="alignmentControl">
+                <button type="button" data-align="left" class="is-active">
+                  Left
+                </button>
+                <button type="button" data-align="center">Center</button>
+                <button type="button" data-align="right">Right</button>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Emphasis</legend>
+              <div class="segmented full" id="emphasisControl">
+                <button type="button" data-emphasis="quiet">Quiet</button>
+                <button type="button" data-emphasis="normal" class="is-active">
+                  Normal
+                </button>
+                <button type="button" data-emphasis="strong">Strong</button>
+              </div>
+            </fieldset>
+            <label for="densityControl"
+              >Vertical density <output id="densityValue">3</output></label
+            >
+            <input
+              id="densityControl"
+              type="range"
+              min="1"
+              max="5"
+              step="1"
+              value="3"
+            />
+            <fieldset>
+              <legend>Canvas palette</legend>
+              <div class="palette-grid" id="paletteControl">
+                <button
+                  type="button"
+                  data-theme="cobalt"
+                  class="is-active"
+                  aria-label="Cobalt palette"
+                  title="Cobalt"
+                >
+                  <span><i></i><i></i><i></i></span>Cobalt
+                </button>
+                <button
+                  type="button"
+                  data-theme="coral"
+                  aria-label="Coral palette"
+                  title="Coral"
+                >
+                  <span><i></i><i></i><i></i></span>Coral
+                </button>
+                <button
+                  type="button"
+                  data-theme="forest"
+                  aria-label="Forest palette"
+                  title="Forest"
+                >
+                  <span><i></i><i></i><i></i></span>Forest
+                </button>
+              </div>
+            </fieldset>
+          </section>
+
+          <div class="inspector-footer">
+            <div
+              class="reorder-actions"
+              role="group"
+              aria-label="Reorder selected block"
+            >
+              <button
+                type="button"
+                id="moveUpButton"
+                title="Move up"
+                aria-label="Move block up"
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="m5 12 5-5 5 5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                id="moveDownButton"
+                title="Move down"
+                aria-label="Move block down"
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="m5 8 5 5 5-5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                id="duplicateButton"
+                title="Duplicate"
+                aria-label="Duplicate block"
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <rect x="6" y="6" width="10" height="10" rx="1.5" />
+                  <path d="M13 6V4H4v9h2" />
+                </svg>
+              </button>
+            </div>
+            <button class="danger-button" id="deleteButton" type="button">
+              Delete block
+            </button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <dialog class="add-dialog" id="addDialog">
+      <form method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">ADD TO CANVAS</span>
+            <h2>Choose a block</h2>
+          </div>
+          <button
+            value="cancel"
+            class="square-button"
+            aria-label="Close dialog"
+          >
+            <svg viewBox="0 0 20 20"><path d="m5 5 10 10M15 5 5 15" /></svg>
+          </button>
+        </div>
+        <div class="block-library" id="blockLibrary"></div>
+        <button value="cancel" class="button ghost dialog-cancel">
+          Cancel
+        </button>
+      </form>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="newProjectDialog">
+      <form method="dialog">
+        <span class="dialog-symbol" aria-hidden="true">↻</span>
+        <h2>Start a fresh workspace?</h2>
+        <p>
+          Your current project is saved in this browser, but starting over
+          replaces the active canvas.
+        </p>
+        <div class="dialog-actions">
+          <button class="button ghost" value="cancel">Keep editing</button>
+          <button class="button dark" value="confirm">Start fresh</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast-region" aria-live="polite" aria-atomic="true">
+      <div class="toast" id="toast" hidden>
+        <span id="toastIcon">✓</span><span id="toastMessage">Saved</span>
+      </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="schema.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
