@@ -15,6 +15,8 @@
 > [!IMPORTANT]
 > Wireframe AI is an honest design-rules prototype. It does **not** call an LLM or any remote AI service. Its “AI” experience comes from transparent, deterministic brief classification, content heuristics, and format-aware layout recipes that run entirely in your browser.
 
+[Open the live studio ↗](https://harshareddy0405.github.io/wireframe-ai/) · [Engineering notes](docs/ENGINEERING.md) · [Quality checks](https://github.com/harshareddy0405/wireframe-ai/actions)
+
 ## The idea
 
 The blank canvas is rarely the real starting point. Product teams usually already have goals, audience clues, desired outcomes, and a rough mental model—but translating that context into a useful first structure still takes time.
